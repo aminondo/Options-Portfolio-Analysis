@@ -10,48 +10,47 @@
 library(shiny)
 library(readr)
 
-options = read_csv("opt.csv")
+wd <- getwd()
+setwd(wd)
 
-port = read_csv("port.csv")
+options = read_csv("Jun14 opt.csv")
+
+port = read_csv("Jun14 Port.csv")
 
 
 # Define UI for application that draws a histogram
 ui <- fluidPage(
   
   # Application title
-  titlePanel("Old Faithful Geyser Data"),
+  titlePanel("Stock Options"),
   
   # Sidebar with a slider input for number of bins 
-  sidebarLayout(
-    sidebarPanel(
-      radioButtons("radio", label = h3("Radio buttons"),
-                   choices = list("options" = 1, "port" = 2
-                   ),selected = 1)
+  sidebarPanel(
+   br(),
+   wellPanel(   helpText("Charts of Data"))
     ),
     
     # Show a plot of the generated distribution
     mainPanel(
-      dataTableOutput("distPlot"),
-      textOutput("test")
       
+      tabsetPanel(
+        tabPanel("Port", dataTableOutput("portplot")),
+        tabPanel("Option", dataTableOutput("optionplot"))
+      )
     )
-  )
 )
 
 # Define server logic required to draw a histogram
 server <- function(input, output) {
   
-  output$distPlot <- renderDataTable({
-    switch(
-      as.numeric(input$radio),
-      options,
-      port
-    )
+  output$optionplot <- renderDataTable({
+      options
   })
   
-  output$test = renderText({
-    print(input$radio)
+  output$portplot = renderDataTable({
+      port
   })
+
 }
 
 # Run the application 
