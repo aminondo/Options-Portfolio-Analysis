@@ -12,7 +12,7 @@ margin_return = margin_return[-1, ]          # removing the first row.
 margin_return = margin_return[-c(86:998), ]
 
 #get quotes and flip the quotes table
-tickers = unique(margin$Ticker)
+tickers = unique(margin_return$Ticker)
 quotes2 = sapply(tickers, function(x){
   getQuote(x)$Last
 })
