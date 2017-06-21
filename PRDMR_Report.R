@@ -25,6 +25,12 @@ View(quotes2)
 
 quotes2 = quotes2[-c(23, 24, 25, 26), ]
 
+#Forumla for Spot
+for(id in 1:nrow(margin_return)){
+  val = quotes2[quotes2$Ticker==margin_return[id,]$Ticker,]$Spot
+  margin_return[id,]$Spot = val
+}
+
 ##View(inner_join(margin_return, quotes2, by = "Ticker"))
 
 
@@ -49,8 +55,8 @@ Req_Standard = 0.2
 #Chnage Today to Sys.Date
 margin_return %>% mutate(Today = Sys.Date()) %>% format(Today, format = "%m/%d/%Y") #still need to learn how to reformat the date
 
-#Forumla for Spot
-margin_return %>% mutate(Spot = )
+
+
 
 #Formula for premium
 margin_return %>% mutate(Premium = median(Bid+Ask)*Qty*Contract_Size)

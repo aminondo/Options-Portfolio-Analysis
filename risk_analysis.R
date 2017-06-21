@@ -8,8 +8,11 @@ library(tidyr)
 contract_size=100
 #-------------------------------------------------------------------------------------
 
+#open files --------------------------------------------------------------------------
 opt = read_csv("opt.csv")
+margin_return = read_csv("margin_return.csv")
 
+# -----------------------------------------------------------------------------------
 
 tickers = unique(opt$Ticker)
 #find quotes of tickers
@@ -22,12 +25,20 @@ cts = opt %>% group_by(Ticker,Type) %>% summarize(aggr=sum(Quantity)) #filter(op
 cts = spread(cts,Type,aggr)
 
 tbl = data.frame(Ticker=tickers,spot=quotes2)
-tbl = inner_join(cts,tbl,by="Ticker")
-tbl = tbl[c(1,4,2,3)] #reorder columns
+tbl = inner_join(tbl,cts,by="Ticker")
+#tbl = tbl[c(1,4,2,3)] #reorder columns
 #rename cols
-tbl = rename(tbl,cts_C=Call)
-tbl = rename(tbl,cts_P=Put)
+tbl = dplyr::rename(tbl,cts_C=Call)
+tbl = dplyr::rename(tbl,cts_P=Put)
 tbl$cts_Net = tbl$cts_P-tbl$cts_C #add col
+
+#Notional
+notional = margin_return %>% group_by(Ticker,Type) %>% summarize(aggr = sum(Notional))
+View(notional)
+notional = spread(notional,Type,aggr)
+tbl = inner_join(tbl,notional, by="Ticker")
+tbl = dplyr::rename(tbl,Notional_C=Call)
+tbl = dplyr::rename(tbl,Notional_P=Put)
 
 #get aggregate greeks
 greeks = opt %>% group_by(Ticker) %>% summarize(Delta=sum(T.Delta),Gamma=sum(T.Gamma),Theta=sum(T.Theta),Vega=sum(T.Vega))
