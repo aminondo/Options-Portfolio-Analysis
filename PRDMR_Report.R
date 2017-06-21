@@ -28,6 +28,8 @@ for(id in 1:nrow(margin_return)){
   margin_return[id,]$Spot = val
 }
 
+
+
 #mutate variables from characters to numeric
 margin_return$Qty = as.numeric(margin_return$Qty)
 margin_return$Bid = as.numeric(margin_return$Bid)
@@ -52,10 +54,16 @@ margin_return$`Margin+Delta`= as.numeric(margin_return$`Margin+Delta`)
 margin_return$`Spot - 1%` = as.numeric(margin_return$`Spot - 1%`)
 margin_return$`N-Notional`= as.numeric(margin_return$`N-Notional`)
 margin_return$`NGM-` = as.numeric(margin_return$`NGM-`)
+margin_return$`NOOMP/C-` = as.numeric(margin_return$`NOOMP/C-`)
+margin_return$`Margin-Delta`= as.numeric(margin_return$`Margin-Delta`) 
+margin_return$`% G/L`= as.numeric(margin_return$`% G/L`) 
+margin_return$`Gross RR`= as.numeric(margin_return$`Gross RR`) Annual
+margin_return$Annual= as.numeric(margin_return$Annual)
 
 #set up contract size & req_standard
 Contract_Size = 100
 Req_Standard = 0.2
+Days_in_Year = 365
 
 #Start developing PRDMR_REPORT
 
@@ -117,6 +125,18 @@ margin_return%>% mutate(`N-Notional` = `Spot - 1%`*Qty*Contract_Size)
 #NGM-
 margin_return%>% mutate(`NGM-`= -(`N-Notional`*Req_Standard))
 
+#NOOMP/C-
+margin_return%>% mutate(`NOOMP/C-` = (`Spot - 1%`-Strike)*(-Qty*Contract_Size))
 
+#Margin-Delta
+margin_return%>% mutate(`Margin-Delta` = (`Net Margin` - ifelse(Type == "Call", max(`NGM-` + `NOOMP/C-`, `Min. Req.`), max(`NGM-` - `NOOMP/C-`, `Min. Req.`))))
 
+#%G/L
+margin_return%>% mutate(`% G/L` = (1 - (`Last Trade`/`Cost Basis`)))
+                        
+#Gross RR
+margin_return%>% mutate(`Gross RR` = abs(Premium/`Net Margin`))
+
+#Annual #Need to change the variable Expiration and Today to dates
+#margin_return%>% mutate(Annual = if(Expiration - Today = 0, "Expiring", Days_in_Year/(Expiration - Today) * `Gross RR`))
 
