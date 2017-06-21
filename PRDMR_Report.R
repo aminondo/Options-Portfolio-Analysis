@@ -7,9 +7,7 @@ library(reshape)
 
 #Read's CSV file and makes the first row the column names
 margin_return <- read_csv("Jun14 PRDMR Report.csv")
-colnames(margin_return) = margin_return[1, ] # the first row will be the header
-margin_return = margin_return[-1, ]          # removing the first row.
-margin_return = margin_return[-c(86:998), ]
+margin_return = margin_return[-c(86:89), ]
 
 #get quotes and flip the quotes table
 tickers = unique(margin_return$Ticker)
@@ -50,6 +48,10 @@ margin_return$`Spot + 1%` = as.numeric(margin_return$`Spot + 1%`)
 margin_return$`N+Notional` = as.numeric(margin_return$`N+Notional`)
 margin_return$`NGM+` = as.numeric(margin_return$`NGM+`)
 margin_return$`NOOMP/C+` = as.numeric(margin_return$`NOOMP/C+`)
+margin_return$`Margin+Delta`= as.numeric(margin_return$`Margin+Delta`)
+margin_return$`Spot - 1%` = as.numeric(margin_return$`Spot - 1%`)
+margin_return$`N-Notional`= as.numeric(margin_return$`N-Notional`)
+margin_return$`NGM-` = as.numeric(margin_return$`NGM-`)
 
 #set up contract size & req_standard
 Contract_Size = 100
@@ -102,6 +104,19 @@ margin_return%>% mutate(`NGM+`= -(`N+Notional`*Req_Standard))
 
 #NOOMP/C+
 margin_return%>% mutate(`NOOMP/C+` = (`Spot + 1%` - Strike)*(-Qty*Contract_Size))
+
+#Margin+Delta
+margin_return%>% mutate(`Margin+Delta` = (`Net Margin` - ifelse(Type == "Call", max(`NGM+` + `NOOMP/C+`, `Min. Req.`), max(`NGM+` - `NOOMP/C+`, `Min. Req.`))))
+
+#Spot-1%
+margin_return %>% mutate(`Spot - 1%` = Spot - Spot*0.01)
+
+#N-Notional
+margin_return%>% mutate(`N-Notional` = `Spot - 1%`*Qty*Contract_Size)
+
+#NGM-
+margin_return%>% mutate(`NGM-`= -(`N-Notional`*Req_Standard))
+
 
 
 
