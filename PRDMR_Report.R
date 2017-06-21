@@ -57,9 +57,9 @@ margin_return %>% mutate(Premium = median(Bid+Ask)*Qty*Contract_Size)
 #Formula for Min Req.
 margin_return %>% mutate(`Min. Req.` = Strike-Qty*Contract_Size*0.1)
 
-#Formula for Min Req.
+#Notional
 margin_return %>% mutate(Notional = Strike*Qty*Contract_Size)
 
 #Magin Not.#Won't work!
-margin_return %>% mutate(`Magin Not.` = Spot*Qty)
-
+#margin_return %>% mutate(`Magin Not.` = Spot*Qty)
+write_csv(margin_return, "margin_return.csv")
