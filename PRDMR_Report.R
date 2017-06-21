@@ -21,7 +21,6 @@ quotes2$Ticker = colnames(quotes2[[1]]) #Coerces the table into a list
 quotes2 = melt(quotes2, "1") #Flips the table
 colnames(quotes2) = c("Spot", "Ticker") #Rename the columns
 quotes2 = quotes2[c(2,1)] #Flips the order of the columns
-View(quotes2)
 
 quotes2 = quotes2[-c(23, 24, 25, 26), ]
 
@@ -31,18 +30,26 @@ for(id in 1:nrow(margin_return)){
   margin_return[id,]$Spot = val
 }
 
-##View(inner_join(margin_return, quotes2, by = "Ticker"))
-
-
-#flip quotes table
-
-
 #mutate variables from characters to numeric
 margin_return$Qty = as.numeric(margin_return$Qty)
 margin_return$Bid = as.numeric(margin_return$Bid)
 margin_return$Ask = as.numeric(margin_return$Ask)
 margin_return$Strike = lapply(margin_return$Strike, function(x){ gsub("\\$", "", x)}) #remove $ sign from strike price
 margin_return$Strike = as.numeric(margin_return$Strike)
+margin_return$Spot = as.numeric(margin_return$Spot)
+margin_return$`Magin Not.`= as.numeric(margin_return$`Magin Not.`)
+margin_return$`OOMP/C` = as.numeric(margin_return$`OOMP/C`) 
+margin_return$`Min. Req.` = as.numeric(margin_return$`Min. Req.`)
+margin_return$`Gross Margin` = as.numeric(margin_return$`Gross Margin`)
+margin_return$Premium = as.numeric(margin_return$Premium) 
+margin_return$Bid = as.numeric(margin_return$Bid)
+margin_return$Ask = as.numeric(margin_return$Ask) 
+margin_return$`Net Margin` = as.numeric(margin_return$`Net Margin`)
+margin_return$`Total Margin` = as.numeric(margin_return$`Total Margin`)
+margin_return$`Spot + 1%` = as.numeric(margin_return$`Spot + 1%`) 
+margin_return$`N+Notional` = as.numeric(margin_return$`N+Notional`)
+margin_return$`NGM+` = as.numeric(margin_return$`NGM+`)
+margin_return$`NOOMP/C+` = as.numeric(margin_return$`NOOMP/C+`)
 
 #set up contract size & req_standard
 Contract_Size = 100
@@ -55,9 +62,6 @@ Req_Standard = 0.2
 #Chnage Today to Sys.Date
 margin_return %>% mutate(Today = Sys.Date()) %>% format(Today, format = "%m/%d/%Y") #still need to learn how to reformat the date
 
-
-
-
 #Formula for premium
 margin_return %>% mutate(Premium = median(Bid+Ask)*Qty*Contract_Size)
 
@@ -67,20 +71,19 @@ margin_return %>% mutate(`Min. Req.` = Strike-Qty*Contract_Size*0.1)
 #Notional
 margin_return %>% mutate(Notional = Strike*Qty*Contract_Size)
 
-#Magin Not.#Won't work!
+#Magin Not.
 margin_return %>% mutate(`Magin Not.` = Spot*Qty)
 write_csv(margin_return, "margin_return.csv")
 
-margin_return$`Magin Not.`
-
-#Gross Margin #Won't work because need Magin Not.
+#Gross Margin 
 margin_return%>% mutate(`Gross Margin` = -(`Magin Not.`*Req_Standard))
 
-#OOMP/C #Same not going to work
+#OOMP/C 
 margin_return%>% mutate(`OOMP/C` = ((Spot-Strike)*(-Qty*Contract_Size)))
 
-#Net Margin #Really need to get spot figured out
-margin_return%>% mutate(`Net Margin` = (ifelse(Type = "Call", max(`Gross Margin`+ `OOMP/C`, `Min. Req.`), max(`Gross Margin`- `OOMP/C`, `Min. Req.`))))
+#Net Margin 
+
+margin_return%>% mutate(`Net Margin` = (ifelse(Type == "Call", max(`Gross Margin`+ `OOMP/C`, `Min. Req.`), max(`Gross Margin`- `OOMP/C`, `Min. Req.`))))
 
 #Premium 
 margin_return%>% mutate(Premium = (median(Bid:Ask)*Qty*Contract_Size))
