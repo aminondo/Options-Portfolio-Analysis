@@ -38,8 +38,9 @@ margin_return$Ask = as.numeric(margin_return$Ask)
 margin_return$Strike = lapply(margin_return$Strike, function(x){ gsub("\\$", "", x)}) #remove $ sign from strike price
 margin_return$Strike = as.numeric(margin_return$Strike)
 
-#set up contract size
+#set up contract size & req_standard
 Contract_Size = 100
+Req_Standard = 0.2
 
 #Start developing PRDMR_REPORT
 
@@ -61,5 +62,37 @@ margin_return %>% mutate(`Min. Req.` = Strike-Qty*Contract_Size*0.1)
 margin_return %>% mutate(Notional = Strike*Qty*Contract_Size)
 
 #Magin Not.#Won't work!
-#margin_return %>% mutate(`Magin Not.` = Spot*Qty)
+margin_return %>% mutate(`Magin Not.` = Spot*Qty)
 write_csv(margin_return, "margin_return.csv")
+
+margin_return$`Magin Not.`
+
+#Gross Margin #Won't work because need Magin Not.
+margin_return%>% mutate(`Gross Margin` = -(`Magin Not.`*Req_Standard))
+
+#OOMP/C #Same not going to work
+margin_return%>% mutate(`OOMP/C` = ((Spot-Strike)*(-Qty*Contract_Size)))
+
+#Net Margin #Really need to get spot figured out
+margin_return%>% mutate(`Net Margin` = (ifelse(Type = "Call", max(`Gross Margin`+ `OOMP/C`, `Min. Req.`), max(`Gross Margin`- `OOMP/C`, `Min. Req.`))))
+
+#Premium 
+margin_return%>% mutate(Premium = (median(Bid:Ask)*Qty*Contract_Size))
+
+#Total Margin
+margin_return%>% mutate(`Total Margin` = `Net Margin` - Premium)
+
+#`Spot + 1%`
+margin_return%>% mutate(`Spot + 1%` = Spot + Spot*0.01)
+
+#N+Notional
+margin_return%>% mutate(`N+Notional` = `Spot + 1%`*Qty*Contract_Size)
+
+#NGM+
+margin_return%>% mutate(`NGM+`= -(`N+Notional`*Req_Standard))
+
+#NOOMP/C+
+margin_return%>% mutate(`NOOMP/C+` = (`Spot + 1%` - Strike)*(-Qty*Contract_Size))
+
+
+
