@@ -60,6 +60,6 @@ margin_return %>% mutate(`Min. Req.` = Strike-Qty*Contract_Size*0.1)
 #Formula for Min Req.
 margin_return %>% mutate(Notional = Strike*Qty*Contract_Size)
 
-#Magin Not.
+#Magin Not.#Won't work!
 margin_return %>% mutate(`Magin Not.` = Spot*Qty)
 
