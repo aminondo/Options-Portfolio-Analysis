@@ -7,6 +7,9 @@ View(opt)
 opt$Ticker = strsplit(opt$Symbol, " ") %>% sapply(function(x){
   x[[1]]
 })
+opt$Type = strsplit(opt$Symbol, " ") %>% sapply(function(x){
+  x[[6]]
+})
 opt$`Symbol Description`=NULL
 opt$`Last Trade`=NULL
 opt$`$ Chg. Close`=NULL
