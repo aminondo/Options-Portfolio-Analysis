@@ -8,43 +8,51 @@
 #
 
 library(shiny)
+library(readr)
+
+options = read_csv("opt.csv")
+
+port = read_csv("port.csv")
+
 
 # Define UI for application that draws a histogram
 ui <- fluidPage(
-   
-   # Application title
-   titlePanel("Old Faithful Geyser Data"),
-   
-   # Sidebar with a slider input for number of bins 
-   sidebarLayout(
-      sidebarPanel(
-         sliderInput("bins",
-                     "Number of bins:",
-                     min = 1,
-                     max = 50,
-                     value = 30)
-      ),
+  
+  # Application title
+  titlePanel("Old Faithful Geyser Data"),
+  
+  # Sidebar with a slider input for number of bins 
+  sidebarLayout(
+    sidebarPanel(
+      radioButtons("radio", label = h3("Radio buttons"),
+                   choices = list("options" = 1, "port" = 2
+                   ),selected = 1)
+    ),
+    
+    # Show a plot of the generated distribution
+    mainPanel(
+      dataTableOutput("distPlot"),
+      textOutput("test")
       
-      # Show a plot of the generated distribution
-      mainPanel(
-         plotOutput("distPlot")
-      )
-   )
+    )
+  )
 )
 
 # Define server logic required to draw a histogram
 server <- function(input, output) {
-   
-   output$distPlot <- renderPlot({
-      # generate bins based on input$bins from ui.R
-      x    <- faithful[, 2] 
-      bins <- seq(min(x), max(x), length.out = input$bins + 1)
-      
-      # draw the histogram with the specified number of bins
-      hist(x, breaks = bins, col = 'darkgray', border = 'white')
-   })
+  
+  output$distPlot <- renderDataTable({
+    switch(
+      as.numeric(input$radio),
+      options,
+      port
+    )
+  })
+  
+  output$test = renderText({
+    print(input$radio)
+  })
 }
 
 # Run the application 
 shinyApp(ui = ui, server = server)
-
