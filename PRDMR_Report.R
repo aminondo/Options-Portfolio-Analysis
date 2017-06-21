@@ -1,6 +1,9 @@
 library(readr)
 library(magrittr)
 library(dplyr)
+library(quantmod)
+library(reshape)
+
 
 #Read's CSV file and makes the first row the column names
 margin_return <- read_csv("~/Desktop/Options-Portfolio-Analysis/Jun14 PRDMR Report.csv")
@@ -8,13 +11,27 @@ View(margin_return)
 colnames(margin_return) = margin_return[1, ] # the first row will be the header
 margin_return = margin_return[-1, ]          # removing the first row.
 
+#get quotes and flip the quotes table
+tickers = unique(margin$Ticker)
+quotes2 = sapply(tickers, function(x){
+  getQuote(x)$Last
+})
+
+quotes2$Ticker = colnames(quotes2[[1]]) #Coerces the table into a list
+quotes2 = melt(quotes2, "1") #Flips the table
+colnames(quotes2) = c("Spot", "Ticker") #Rename the columns
+quotes2 = quotes2[c(2,1)] #Flips the order of the columns
+View(quotes2)
+
+#flip quotes table
+
+
 #mutate variables from characters to numeric
 margin_return$Qty = as.numeric(margin_return$Qty)
 margin_return$Bid = as.numeric(margin_return$Bid)
 margin_return$Ask = as.numeric(margin_return$Ask)
 margin_return$Strike = lapply(margin_return$Strike, function(x){ gsub("\\$", "", x)}) #remove $ sign from strike price
 margin_return$Strike = as.numeric(margin_return$Strike)
-
 
 #set up contract size
 Contract_Size = 100
@@ -39,3 +56,6 @@ margin_return %>% mutate(`Min. Req.` = Strike-Qty*Contract_Size*0.1)
 margin_return %>% mutate(Notional = Strike*Qty*Contract_Size)
 
 #Magin Not.
+margin_return %>% mutate(`Magin Not.` = Spot*Qty)
+
+#
