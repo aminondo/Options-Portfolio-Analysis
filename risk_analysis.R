@@ -42,3 +42,30 @@ tbl$`%_Gamma` = tbl$Gamma * tbl$spot / contract_size
 # % of port delta
 total_delta = sum(tbl$Delta)
 tbl$`%_of_Port_Delta` = tbl$Delta/total_delta*100
+
+# %_Delta / Port % Delta
+total.perc.delta = sum(tbl$`%_Delta`)
+total.perc.delta
+tbl$`%Delta_of_Port_%Delta` = tbl$`%_Delta`/total.perc.delta*100
+
+# % of port gamma
+total_gamma = sum(tbl$Gamma)
+tbl$`%_of_Port_Gamma` = tbl$Gamma/total_gamma*100
+
+# %_gamma / Port % gamma
+total.perc.gamma = sum(tbl$`%_Gamma`)
+total.perc.gamma
+tbl$`%Gamma_of_Port_%Gamma` = tbl$`%_Gamma`/total.perc.gamma*100
+
+# % of port theta
+total_theta = sum(tbl$Theta)
+tbl$`%_of_Port_Theta` = tbl$Theta/total_theta*100
+
+#Batting Average
+tbl$batting_avg = tbl$Theta/tbl$`%_Delta`
+
+#log roll
+tbl$log_roll = tbl$`%_Gamma`/tbl$`%_Delta`
+
+#theta_gamma_cvg
+tbl$theta_gamma_cvg = -tbl$Theta/tbl$`%_Gamma`
