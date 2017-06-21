@@ -6,10 +6,10 @@ library(reshape)
 
 
 #Read's CSV file and makes the first row the column names
-margin_return <- read_csv("~/Desktop/Options-Portfolio-Analysis/Jun14 PRDMR Report.csv")
-View(margin_return)
+margin_return <- read_csv("Jun14 PRDMR Report.csv")
 colnames(margin_return) = margin_return[1, ] # the first row will be the header
 margin_return = margin_return[-1, ]          # removing the first row.
+margin_return = margin_return[-c(86:998), ]
 
 #get quotes and flip the quotes table
 tickers = unique(margin$Ticker)
@@ -22,6 +22,11 @@ quotes2 = melt(quotes2, "1") #Flips the table
 colnames(quotes2) = c("Spot", "Ticker") #Rename the columns
 quotes2 = quotes2[c(2,1)] #Flips the order of the columns
 View(quotes2)
+
+quotes2 = quotes2[-c(23, 24, 25, 26), ]
+
+##View(inner_join(margin_return, quotes2, by = "Ticker"))
+
 
 #flip quotes table
 
@@ -58,4 +63,3 @@ margin_return %>% mutate(Notional = Strike*Qty*Contract_Size)
 #Magin Not.
 margin_return %>% mutate(`Magin Not.` = Spot*Qty)
 
-#
