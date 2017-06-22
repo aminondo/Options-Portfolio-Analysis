@@ -17,12 +17,17 @@ library(tidyr)
 contract_size=100
 #-------------------------------------------------------------------------------------
 
+#runs opt script
+#source("port_greeks.R")
+
 #open files --------------------------------------------------------------------------
 opt = read_csv("opt.csv")
 margin_return = read_csv("margin_return.csv")
 
-# -----------------------------------------------------------------------------------
 
+#--------------------------------------------------------------------------------------
+#CREATE RISK ANALYSIS TABLE
+#--------------------------------------------------------------------------------------
 #get unique quotes and tickers
 tickers = unique(opt$Ticker)
 quotes = opt %>% group_by(Ticker) %>% summarize(Spot = unique(Spot))
@@ -102,4 +107,37 @@ tbl$theta_gamma_cvg = -tbl$Theta/tbl$`%_Gamma`
 write_csv(tbl,"risk_tbl.csv")
 
 
+# GENERATE INFO FROM RISK ANALYSIS AND MARGIN RETURN DATA
 
+#expiration table
+exp_tbl = margin_return %>% group_by(Expiration) %>% summarize(premium = abs(sum(Premium)))
+tmp = margin_return %>% group_by(Expiration,Type) %>% summarize(sum = sum(`Total Margin`))
+tmp = spread(tmp,Type,sum )
+exp_tbl = inner_join(exp_tbl,tmp, by="Expiration")
+
+exp_tbl = dplyr::rename(exp_tbl,Tot_Margin_C=Call)
+exp_tbl = dplyr::rename(exp_tbl,Tot_Margin_P=Put)
+View(exp_tbl)
+
+exp_summary = c(premium_tot = sum(exp_tbl$premium),totMarginP = sum(exp_tbl$Tot_Margin_P, na.rm=T),totMarginC = sum(exp_tbl$Tot_Margin_C, na.rm=T))
+exp_summary
+
+
+
+
+mgn_1_Delta = sum(tbl$Notional_P)*.25
+cash = 7336380.33
+shortfall = mgn_1_Delta+cash
+Port_Value = cash-exp_summary[["premium_tot"]]
+
+High_Water = 6958779
+climb = Port_Value-High_Water
+Drawdown=climb/High_Water*100
+Gain_Rqd = (High_Water/Port_Value-1)*100
+
+
+# % Mkt Table
+
+perc_Mkt = c(2,1,-1,-2,-3,-4,-5,-10)
+perc_Mkt = as.data.frame(perc_Mkt)
+perc_Mkt = mutate(perc_Mkt, PL = perc_Mkt * sum(tbl$`%_Delta`)+(.5*perc_Mkt*sum(tbl$`%_Gamma`)))
