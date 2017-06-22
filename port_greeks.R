@@ -1,3 +1,10 @@
+# Author: Antonio Minondo
+# File: port_greeks.R
+# Description: imports info from Jun14 opt.csv and gets the spot of each ticker option, and writes
+# to a csv. Eventually the idea is to pull directly from eTrade API instead of the csv
+# Date: Jun22,2017
+#------------------------------------------------------------------------------------------------
+
 library(dplyr)
 library(readr)
 #read in file
