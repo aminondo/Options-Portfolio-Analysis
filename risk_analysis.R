@@ -99,5 +99,7 @@ tbl$log_roll = tbl$`%_Gamma`/tbl$`%_Delta`
 #theta_gamma_cvg
 tbl$theta_gamma_cvg = -tbl$Theta/tbl$`%_Gamma`
 
+write_csv(tbl,"risk_tbl.csv")
+
 
 
