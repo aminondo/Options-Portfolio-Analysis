@@ -59,13 +59,12 @@ margin_return$Annual= as.numeric(margin_return$Annual)
 margin_return$`Yld / Put G` = as.numeric(margin_return$`Yld / Put G`) 
 margin_return$`Yld / Put A` = as.numeric(margin_return$`Yld / Put A`)
 
+
 #Make Today and Expiration dates; Create Days Until Expiration Column
 margin_return = margin_return %>% mutate(Today = Sys.Date())
 margin_return = margin_return %>% mutate(Expiration = as.Date(margin_return$Expiration, "%m/%d/%y"))
 margin_return$Days_Until_Expire = margin_return$Expiration - margin_return$Today
 margin_return = margin_return%>% mutate(Days_Until_Expire = as.numeric(Days_Until_Expire))
-
-
 
 #Start developing PRDMR_REPORT
 #Formula for premium
@@ -125,8 +124,10 @@ margin_return = margin_return%>% mutate(`NGM-`= -(`N-Notional`*Req_Standard))
 #NOOMP/C-
 margin_return = margin_return%>% mutate(`NOOMP/C-` = (`Spot - 1%`-Strike)*(-Qty*Contract_Size))
 
-#Margin-Delta
-margin_return = margin_return%>% mutate(`Margin-Delta` = (`Net Margin` - ifelse(Type == "Call", max(`NGM-` + `NOOMP/C-`, `Min. Req.`), max(`NGM-` - `NOOMP/C-`, `Min. Req.`))))
+#Margin-Delta#Fix this one
+margin_return = margin_return%>% mutate(`Margin-Delta` = (`Net Margin` - ifelse(Type == "Call", 
+                                                                                ifelse(`NGM-` + `NOOMP/C-` > `Min. Req.`, `NGM-` + `NOOMP/C-`, `Min. Req.`), 
+                                                                                ifelse(`NGM-` - `NOOMP/C-` > `Min. Req.`, `NGM-` - `NOOMP/C-`, `Min. Req.`))))
 
 #%G/L
 margin_return = margin_return%>% mutate(`% G/L` = (1 - (`Last Trade`/`Cost Basis`)))
