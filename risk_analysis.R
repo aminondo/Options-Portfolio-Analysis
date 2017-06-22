@@ -137,7 +137,9 @@ Gain_Rqd = (High_Water/Port_Value-1)*100
 
 
 # % Mkt Table
-
 perc_Mkt = c(2,1,-1,-2,-3,-4,-5,-10)
 perc_Mkt = as.data.frame(perc_Mkt)
 perc_Mkt = mutate(perc_Mkt, PL = perc_Mkt * sum(tbl$`%_Delta`)+(.5*perc_Mkt*sum(tbl$`%_Gamma`)))
+perc_Mkt = mutate(perc_Mkt, New_Delta = (perc_Mkt * sum(tbl$`%_Delta`))+sum(tbl$`%_Gamma`))
+perc_Mkt = mutate(perc_Mkt, D100 = sum(tbl$Notional_P)*.01*perc_Mkt)
+perc_Mkt = mutate(perc_Mkt, D50 = sum(tbl$Notional_P)*.01*.5*perc_Mkt)
