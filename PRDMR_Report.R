@@ -137,12 +137,10 @@ margin_return = margin_return%>% mutate(`% G/L` = (1 - (`Last Trade`/`Cost Basis
 margin_return = margin_return%>% mutate(`Gross RR` = abs(Premium/`Net Margin`))
 
 #Annual #Need to change the variable Expiration and Today to dates
-margin_return = margin_return%>% mutate(Annual = ifelse(Days_Until_Expire = 0, "Expiring", Days_in_Year/(Days_Until_Expire) * `Gross RR`))
+margin_return = margin_return%>% mutate(Annual = ifelse(Days_Until_Expire == 0, "Expiring", Days_in_Year/(Days_Until_Expire) * `Gross RR`))
 
 #Yld/Put G
 margin_return = margin_return %>% mutate(`Yld / Put G` = ifelse(Type == "Call", "NA", ifelse(Spot<Strike, abs(((Spot-Strike)*Qty*Contract_Size) + Premium)/`Net Margin`, "NA")))
 
 #Yld/Put A
 margin_return = margin_return%>% mutate(`Yld / Put A` = ifelse(`Yld / Put G` == "NA", "NA", Days_in_Year/(Days_Until_Expire)*`Yld / Put G`))
-
-
