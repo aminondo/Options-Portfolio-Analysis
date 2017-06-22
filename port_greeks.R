@@ -38,10 +38,11 @@ opt = mutate(opt, T.Rho=opt$Quantity*opt$Rho*contract_size)
 opt = opt[c(1,8,2,3,4,5,6,7,9:14)] #reorder columns
 
 #Forumla for Spot
+opt[,"Spot"]=NA
 for(id in 1:nrow(opt)){
   val = quotes[quotes$Ticker==opt[id,]$Ticker,]$Spot
-  print(val)
-  #opt[id,]$Spot = val
+  #print(val)
+  opt[id,]$Spot = val
 }
-
+#View(opt)
 write_csv(opt,"opt.csv")
