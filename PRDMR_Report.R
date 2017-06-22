@@ -143,3 +143,6 @@ margin_return = margin_return %>% mutate(`Yld / Put G` = ifelse(Type == "Call", 
 
 #Yld/Put A
 margin_return = margin_return%>% mutate(`Yld / Put A` = ifelse(is.na(`Yld / Put G`), NA, Days_in_Year/(Days_Until_Expire)*`Yld / Put G`))
+
+
+write_csv(margin_return, "margin_return.csv")
