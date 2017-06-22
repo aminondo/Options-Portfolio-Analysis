@@ -1,7 +1,5 @@
 ---
-title: "Option Basics"
-author: "Conor"
-date: "6/21/2017"
+title: "Options"
 output: html_document
 ---
 
@@ -11,13 +9,16 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 
-
-
-## Options
 An option is a financial derivative that represents a contract sold by one party to another party. The contract offers the buyer the right, but not the obligation, to buy (call) or sell (put) a security or other financial asset at an agreed-upon price during a certain period of time or on a specific date.
 
 #### Option Trading
-There are three main uses for options in trading 1) insure a portfolio 2) 
+There are three main uses for options in trading 
+
+1)Speculation- Speculation is making a bet on the outcome of the future price of something.
+
+2)Hedging- Options were invented not for speculation, but for the purpose of hedging. Hedging is a strategy that reduces risk at a reasonable cost.
+
+3)Spreading- spreading is the use of two or more options positions. In effect, it combines having a market opinion (speculation) with limiting losses (hedging).
 
 
 #### Terms
@@ -28,14 +29,14 @@ Option Premium: The price paid to buy the option contract.
 Strike Price: The price the stock has to be at in order for the option to be exercised (for puts where it can be sold and for calls where it can be bought)
 Expiration date: The date you no longer have the option to buy or sell the stock
 In-the-money: An option that is at its strike price
-Out-of-the-money:an option that is not at its strike price (these are currently worthless)
+Out-of-the-money: An option that is not at its strike price (these are currently worthless)
 
 
 ### Call option
 Call options give the buyer the option to buy at certain price, so the buyer would want the stock price to go up because they would buy the stock at the lower strike price and then be able to sell it for the higher market price. 
 
 #### Call Option Example
-Let's say Google's stock is currently trading at 50 dollars. You believe the price of the stock is going to go up. However due to the uncertianty associated with investing you are not sure. Rather than buying 100 shares at 50 dollars a piece and taking a huge risk with a 5000 dollar investment you can use a call option. You pay a an option premium of 2 cents per share (2 dollars) to have the option to buy these 100 shares with a strike price of 51 dollars. That way if the stock does go up to or past 51 dollars you can exerise your option to buy the shares and make a profit. However, if the stock price goes down to 40 dollars a share you are not stuck losing 1000 dollars you simply choose not to buy the stock with your option and only lose 2 dollars on the investment. 
+Let's say Google's stock is currently trading at 50 dollars. You believe the price of the stock is going to go up. However due to the uncertainty associated with investing you are not sure. Rather than buying 100 shares at 50 dollars a piece and taking a huge risk with a 5000 dollar investment you can use a call option. You pay a an option premium of 2 cents per share (2 dollars) to have the option to buy these 100 shares with a strike price of 51 dollars. That way if the stock does go up to or past 51 dollars you can exercise your option to buy the shares and make a profit. However, if the stock price goes down to 40 dollars a share you are not stuck losing 1000 dollars you simply choose not to buy the stock with your option and only lose 2 dollars on the investment. 
 
 ### Put Option
 
@@ -43,12 +44,12 @@ Call options give the buyer the option to sell their shares at certain price, so
 
 #### Put Example
 
-You have 100 shares of Amazon at 160 dollars a share. However, you are worried that the price of amazon will drop dramatically at sometime in the future. So you buy an put option with a premium of 12 dollars a strike price of 155 dollars. If Amazon then begins to drop in freefall past 155 dolars a share all the way to 110 dollars a share you can sell it to the writer of the option and minmize your losses to merely 5 dollars a share rather than 50 dollars a share (500 dollars vs 5000 dollars).
+You have 100 shares of Amazon at 160 dollars a share. However, you are worried that the price of amazon will drop dramatically at sometime in the future. So you buy an put option with a premium of 12 dollars a strike price of 155 dollars. If Amazon then begins to drop in free-fall past 155 dollars a share all the way to 110 dollars a share you can sell it to the writer of the option and minimize your losses to merely 5 dollars a share rather than 50 dollars a share (500 dollars vs 5000 dollars).
 
 
 ## Option Premiums
 
-Option premiums have two main factors that decide their value. The option's intrinsic value and its time value. These two added together are the price of the option premium.
+Option premiums have two main factors that decide their value the option's intrinsic value and its time value. These two added together are the price of the option premium.
 
 ### Intrinsic Value
 
@@ -56,19 +57,23 @@ The intrinsic value is the difference between the underlying's price and the str
 
 ### Time Value
 
-Time value is the second part of the option price and is refered to as its extrinsic value. The closer the option is to its expiration the less time value the option has (this is knwon as time decay). Once an option reaches expiration its time value is equal to 0.  Time value has a few factors that decide it including the underlying stock price, the time until expiration, strike price, interest rates and most importantly implied volatility.
+Time value is the second part of the option price and is referred to as its extrinsic value. The closer the option is to its expiration the less time value the option has (this is known as time decay). Once an option reaches expiration its time value is equal to 0.  Time value has a few factors that decide it including the underlying stock price, the time until expiration, strike price, interest rates and most importantly implied volatility.
 
 #### Implied Volatility
 
-Implied volatility is a complex rage of factors that represents the expected volatility of the underlying stock over the life time of the option. This is a factor drivien by the supply and deamand of the stock. Generally the closer the option is to its expiration date, the lower the effect implied volatility has on the option price due to time decay. Each stock has its own range of volatility and these should not be compared stock to stock but rather to its own mean value.
+Implied volatility is a complex rage of factors that represents the expected volatility of the underlying stock over the life time of the option. This is a factor driven by the supply and demand of the stock. Generally the closer the option is to its expiration date, the lower the effect implied volatility has on the option price due to time decay. Each stock has its own range of volatility and these should not be compared stock to stock but rather to its own mean value.
 
+# Tables
 
+## OPT File
+
+![This is the opt table that is scrapped from the E-Trade API which is originally a csv file](/Users/conormclaughlin/Desktop/opt.table.png)
 ### The Greeks 
 
-![The greeks are a the different dimensions of risk assoaciated with a specific option ](/Users/conormclaughlin/Desktop/The.Greeks.Table.png)
+![The Greeks are a the different dimensions of risk associated with a specific option ](/Users/conormclaughlin/Desktop/The.Greeks.Table.png)
 
 #### Delta
-Delta is a value that shows the expected change in the price of the option given a one point increase in the uunderlying stock. The values range from -1 to 1 with .5 being the expected delta value of a stock that is  This is why deltas for puts is always negative and 
+Delta is a value that shows the expected change in the price of the option given a one-point increase in the underlying stock. The values range from -1 to 1 with .5 being the expected delta value of a stock that is at strike price. Due to it measuring the increase of the stock deltas for puts are always negative and for calls they are always positive.
 
 #### Gamma
 Gamma is the rate of change in delta given the given a one point increase in the underlying stock.
@@ -83,17 +88,12 @@ Vega measures the sensitivity of the price of an option to changes in volatility
 Rho is the rate at which the price of a derivative changes relative to a change in the risk-free rate of interest. Rho measures the sensitivity of an option or options portfolio to a change in interest rate.
 For example, if an option or options portfolio has a rho of 1, then for every percentage-point increase in interest rates, the value of the option increases 1%.
 
-# Tables
-
-## OPT File
-
-![This is the opt table that is scrapped from the E-Trade API which is originially a csv file](/Users/conormclaughlin/Desktop/opt.table.png)
 
 
 ## Port File
 
 
-![This is the opt table that is scrapped from the E-Trade API which is originially a csv file](/Users/conormclaughlin/Desktop/Port.table.png)
+![This is the Port table that is scrapped from the E-Trade API which is originally a csv file](/Users/conormclaughlin/Desktop/Port.table.png)
 
 
 ### P&L Today
@@ -102,13 +102,11 @@ Is the profit and losses from the current day.
 ### P&L Unrealized
 This is the current profit or loss on an open position. 
 
-### % P&L Unrealized 
-
 ### $ Chng. Close
-This is the change in the price of the option duing the day. 
+This is the change in the price of the option during the day. 
 
 ### Last Trade
-This is the price of option from the last trade that occured.
+This is the price of option from the last trade that occurred.
 
 ### Bid
 The bid price is the current highest price the market is offering to buy an underlying. This is the price you would get if you tried to sell the option.
@@ -119,7 +117,8 @@ The ask price is the current lowest price the market is offering to sell an unde
 (Typically want the bid/ask spread to be close as this makes the option more liquid)
 
 ### Cost Basis
-This is how much the asset cost you when you initally invested
+This is how much the asset cost you when you initially invested.
+
 
 
 
