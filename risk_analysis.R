@@ -135,7 +135,17 @@ climb = Port_Value-High_Water
 Drawdown=climb/High_Water*100
 Gain_Rqd = (High_Water/Port_Value-1)*100
 
+# Totals By Ticker
 
+totals_by_ticker = margin_return %>% group_by(Ticker) %>% summarize(Premium = abs(sum(Premium)), Total_Margin=sum(`Total Margin`))
+tmp = tbl %>% group_by(Ticker) %>% summarize(Total_Theta = sum(Theta))
+totals_by_ticker = inner_join(totals_by_ticker,tmp, by="Ticker")
+totals_by_ticker = totals_by_ticker[c(1,2,4,3)]
+totals_by_ticker = mutate(totals_by_ticker, Theta_Margin = Total_Theta/Total_Margin)
+totals_by_ticker = mutate(totals_by_ticker, Prem_Margin = Premium/Total_Margin)
+totals_by_ticker = mutate(totals_by_ticker, Theta_Prem = Total_Theta/Premium)
+
+write_csv(totals_by_ticker, "totals_by_ticker.csv")
 # % Mkt Table
 
 perc_Mkt = c(2,1,-1,-2,-3,-4,-5,-10)
