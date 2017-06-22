@@ -146,6 +146,7 @@ totals_by_ticker = mutate(totals_by_ticker, Prem_Margin = Premium/Total_Margin)
 totals_by_ticker = mutate(totals_by_ticker, Theta_Prem = Total_Theta/Premium)
 
 write_csv(totals_by_ticker, "totals_by_ticker.csv")
+
 # % Mkt Table
 perc_Mkt = c(2,1,-1,-2,-3,-4,-5,-10)
 perc_Mkt = as.data.frame(perc_Mkt)
@@ -153,3 +154,6 @@ perc_Mkt = mutate(perc_Mkt, PL = perc_Mkt * sum(tbl$`%_Delta`)+(.5*perc_Mkt*sum(
 perc_Mkt = mutate(perc_Mkt, New_Delta = (perc_Mkt * sum(tbl$`%_Delta`))+sum(tbl$`%_Gamma`))
 perc_Mkt = mutate(perc_Mkt, D100 = sum(tbl$Notional_P)*.01*perc_Mkt)
 perc_Mkt = mutate(perc_Mkt, D50 = sum(tbl$Notional_P)*.01*.5*perc_Mkt)
+plus_margin_delta = sum(margin_return$`Margin+Delta`)
+minus_margin_delta = sum(margin_return$`Margin-Delta`)
+perc_Mkt = mutate(perc_Mkt, Mgn_Sensitivity = ifelse(perc_Mkt <= -1, perc_Mkt*minus_margin_delta, perc_Mkt*plus_margin_delta))
