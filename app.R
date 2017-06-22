@@ -17,6 +17,8 @@ options = read_csv("Jun14 opt.csv")
 
 port = read_csv("Jun14 Port.csv")
 
+risk_table = read_csv("risk_tbl.csv")
+
 
 # Define UI for application that draws a histogram
 ui <- fluidPage(
@@ -35,7 +37,8 @@ ui <- fluidPage(
       
       tabsetPanel(
         tabPanel("Port", dataTableOutput("portplot")),
-        tabPanel("Option", dataTableOutput("optionplot"))
+        tabPanel("Option", dataTableOutput("optionplot")),
+        tabPanel("Risk Table", dataTableOutput("risktable"))
       )
     )
 )
@@ -46,7 +49,9 @@ server <- function(input, output) {
   output$optionplot <- renderDataTable({
       options
   })
-  
+  output$risktable = renderDataTable({
+    risk_table
+  })
   output$portplot = renderDataTable({
       port
   })
