@@ -69,10 +69,10 @@ margin_return = margin_return%>% mutate(Days_Until_Expire = as.numeric(Days_Unti
 
 #Start developing PRDMR_REPORT
 #Formula for premium
-margin_return = margin_return %>% mutate(Premium = median(Bid+Ask)*Qty*Contract_Size)
+margin_return = margin_return %>% mutate(Premium = (Bid+Ask)/2*Qty*Contract_Size)
 
 #Formula for Min Req.
-margin_return = margin_return %>% mutate(`Min. Req.` = Strike-Qty*Contract_Size*0.1)
+margin_return = margin_return %>% mutate(`Min. Req.` = Strike*-Qty*Contract_Size*0.1)
 
 #Notional
 margin_return = margin_return %>% mutate(Notional = Strike*Qty*Contract_Size)
@@ -88,10 +88,10 @@ margin_return = margin_return%>% mutate(`Gross Margin` = -(`Magin Not.`*Req_Stan
 margin_return = margin_return%>% mutate(`OOMP/C` = ((Spot-Strike)*(-Qty*Contract_Size)))
 
 #Net Margin 
-margin_return = margin_return%>% mutate(`Net Margin` = (ifelse(Type == "Call", max(`Gross Margin`+ `OOMP/C`, `Min. Req.`), max(`Gross Margin`- `OOMP/C`, `Min. Req.`))))
+margin_return = margin_return%>% mutate(`Net Margin` = (ifelse(Type == "Call", 
+                                                               ifelse(`Gross Margin`+ `OOMP/C`>`Min. Req.`,`Gross Margin`+ `OOMP/C`,`Min. Req.`),
+                                                               ifelse(`Gross Margin`- `OOMP/C`>`Min. Req.`,`Gross Margin`- `OOMP/C`,`Min. Req.`))))
 
-#Premium #REPEATED
-#margin_return = margin_return%>% mutate(Premium = (median(Bid:Ask)*Qty*Contract_Size))
 
 #Total Margin
 margin_return = margin_return%>% mutate(`Total Margin` = `Net Margin` - Premium)
@@ -109,7 +109,9 @@ margin_return = margin_return%>% mutate(`NGM+`= -(`N+Notional`*Req_Standard))
 margin_return = margin_return%>% mutate(`NOOMP/C+` = (`Spot + 1%` - Strike)*(-Qty*Contract_Size))
 
 #Margin+Delta
-margin_return = margin_return%>% mutate(`Margin+Delta` = (`Net Margin` - ifelse(Type == "Call", max(`NGM+` + `NOOMP/C+`, `Min. Req.`), max(`NGM+` - `NOOMP/C+`, `Min. Req.`))))
+margin_return = margin_return%>% mutate(`Margin+Delta` = (`Net Margin` - ifelse(Type == "Call", 
+                                                                                ifelse(`NGM+` + `NOOMP/C+`>`Min. Req.`,`NGM+` + `NOOMP/C+`,`Min. Req.`), 
+                                                                                ifelse(`NGM+` - `NOOMP/C+`>`Min. Req.`,`NGM+` - `NOOMP/C+`,`Min. Req.`))))
 
 #Spot-1%
 margin_return = margin_return %>% mutate(`Spot - 1%` = Spot - Spot*0.01)
