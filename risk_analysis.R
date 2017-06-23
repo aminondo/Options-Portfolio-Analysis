@@ -119,13 +119,13 @@ exp_tbl = dplyr::rename(exp_tbl,Tot_Margin_C=Call)
 exp_tbl = dplyr::rename(exp_tbl,Tot_Margin_P=Put)
 View(exp_tbl)
 
-exp_summary = c(premium_tot = sum(exp_tbl$premium),totMarginP = sum(exp_tbl$Tot_Margin_P, na.rm=T),totMarginC = sum(exp_tbl$Tot_Margin_C, na.rm=T))
-exp_summary
+exp_summary = c("TOTALS",premium_tot = sum(exp_tbl$premium),totMarginP = sum(exp_tbl$Tot_Margin_P, na.rm=T),totMarginC = sum(exp_tbl$Tot_Margin_C, na.rm=T))
+rbind(exp_tbl,exp_summary)
+
+write_csv(exp_tbl,"exp_tbl.csv")
 
 
-
-
-mgn_1_Delta = sum(tbl$Notional_P)*.25
+.mgn_1_Delta = sum(tbl$Notional_P)*.25
 cash = 7336380.33
 shortfall = mgn_1_Delta+cash
 Port_Value = cash-exp_summary[["premium_tot"]]
@@ -157,3 +157,5 @@ perc_Mkt = mutate(perc_Mkt, D50 = sum(tbl$Notional_P)*.01*.5*perc_Mkt)
 plus_margin_delta = sum(margin_return$`Margin+Delta`)
 minus_margin_delta = sum(margin_return$`Margin-Delta`)
 perc_Mkt = mutate(perc_Mkt, Mgn_Sensitivity = ifelse(perc_Mkt <= -1, perc_Mkt*minus_margin_delta, perc_Mkt*plus_margin_delta))
+
+write_csv(perc_Mkt,"perc_mkt.csv")
