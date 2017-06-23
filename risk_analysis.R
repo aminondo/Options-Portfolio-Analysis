@@ -134,6 +134,8 @@ climb = Port_Value-High_Water,
 Drawdown=climb/High_Water*100,
 Gain_Rqd = (High_Water/Port_Value-1)*100)
 
+write_csv(summ,"summ.csv")
+
 # Totals By Ticker
 
 totals_by_ticker = margin_return %>% group_by(Ticker) %>% summarize(Premium = abs(sum(Premium)), Total_Margin=sum(`Total Margin`))
