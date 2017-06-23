@@ -135,13 +135,12 @@ The ask price is the current lowest price the market is offering to sell an unde
 This is how much the asset cost you when you initially invested.
 
 
-<<<<<<< HEAD
 ## Options Method Used in Model
 
 The options strategy used is known as short volatility. Within this strategy the portfolio owner only sells options rather than ever buying them. The underlying idea is the same as the insurance market as the protfolio takes on small profits overt time to compensate for the large losses it takes very rarely. 
-=======
+
 ## Shiny App
->>>>>>> dfec12811cc1b9a2cc41dfad044bdf6a3241aef2
+
 
 What the shiny app does is create a cohesive enviroment for a trader, which takes the the table information from csv's which are pulled from the etrade API. 
 
