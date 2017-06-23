@@ -119,21 +119,20 @@ exp_tbl = dplyr::rename(exp_tbl,Tot_Margin_C=Call)
 exp_tbl = dplyr::rename(exp_tbl,Tot_Margin_P=Put)
 View(exp_tbl)
 
-exp_summary = c("TOTALS",premium_tot = sum(exp_tbl$premium),totMarginP = sum(exp_tbl$Tot_Margin_P, na.rm=T),totMarginC = sum(exp_tbl$Tot_Margin_C, na.rm=T))
+exp_summary = c(premium_tot = sum(exp_tbl$premium),totMarginP = sum(exp_tbl$Tot_Margin_P, na.rm=T),totMarginC = sum(exp_tbl$Tot_Margin_C, na.rm=T))
 rbind(exp_tbl,exp_summary)
 
 write_csv(exp_tbl,"exp_tbl.csv")
 
-
-.mgn_1_Delta = sum(tbl$Notional_P)*.25
-cash = 7336380.33
-shortfall = mgn_1_Delta+cash
-Port_Value = cash-exp_summary[["premium_tot"]]
-
-High_Water = 6958779
-climb = Port_Value-High_Water
-Drawdown=climb/High_Water*100
-Gain_Rqd = (High_Water/Port_Value-1)*100
+summ = data.frame(
+mgn_1_Delta = sum(tbl$Notional_P)*.25,
+cash = 7336380.33,
+shortfall = mgn_1_Delta+cash,
+Port_Value = cash-exp_summary[["premium_tot"]],
+High_Water = 6958779,
+climb = Port_Value-High_Water,
+Drawdown=climb/High_Water*100,
+Gain_Rqd = (High_Water/Port_Value-1)*100)
 
 # Totals By Ticker
 
