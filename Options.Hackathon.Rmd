@@ -120,7 +120,13 @@ The ask price is the current lowest price the market is offering to sell an unde
 This is how much the asset cost you when you initially invested.
 
 
+## Shiny App
 
+What the shiny app does is create a cohesive enviroment for a trader, which takes the the table information from csv's which are pulled from the etrade API. 
+
+The risk table and the totals by tickers is specific to each trader, with each column being its own calculation, with each column being to to be sorted and ordered. 
+
+The graphs tab is actually a set a graphs produced with the help of Andrew Collier, where you can search pull any stock option chain with the given ticker. The first graph shows option premium with respect to the strike price, and bottom graph is the open intrest with respect to the strike price. The dotted line is the current price of the stock. 
 
 
 
