@@ -120,6 +120,14 @@ $(document).ready(function () {
 </div>
 
 
+<div id="overview" class="section level2">
+<h2>Overview</h2>
+<p>We have developed a real-time trade screening platform with multiple analysis tools in R and Shiny for options trading. These tools can be utilized to help manage portfolio risk and enter / exit positions. These tools simplify and automate multiple static excel spreadsheets that used to require manual manipulation daily.</p>
+<p>The platform builds and maintains customized daily margin, returns, and portfolio risk reporting in R, including aggregated “Greeks” statistics.</p>
+<p>The platform pulls option chain data from the Etrade API and then populates multiple tables, creates custom visualizations in Shiny, and assists with the decision making process for option traders.</p>
+</div>
+<div id="what-options-are" class="section level2">
+<h2>What options are</h2>
 <p>An option is a financial derivative that represents a contract sold by one party to another party. The contract offers the buyer the right, but not the obligation, to buy (call) or sell (put) a security or other financial asset at an agreed-upon price during a certain period of time or on a specific date.</p>
 <div id="option-trading" class="section level4">
 <h4>Option Trading</h4>
@@ -148,6 +156,7 @@ Option Premium: The price paid to buy the option contract. Strike Price: The pri
 <div id="put-example" class="section level4">
 <h4>Put Example</h4>
 <p>You have 100 shares of Amazon at 160 dollars a share. However, you are worried that the price of amazon will drop dramatically at sometime in the future. So you buy an put option with a premium of 12 dollars a strike price of 155 dollars. If Amazon then begins to drop in free-fall past 155 dollars a share all the way to 110 dollars a share you can sell it to the writer of the option and minimize your losses to merely 5 dollars a share rather than 50 dollars a share (500 dollars vs 5000 dollars).</p>
+</div>
 </div>
 </div>
 <div id="option-premiums" class="section level2">
@@ -234,6 +243,7 @@ Option Premium: The price paid to buy the option contract. Strike Price: The pri
 </div>
 <div id="options-method-used-in-model" class="section level2">
 <h2>Options Method Used in Model</h2>
+<p>The options strategy used is known as short volatility. Within this strategy the portfolio owner only sells options rather than ever buying them. The underlying idea is the same as the insurance market as the protfolio takes on small profits overt time to compensate for the large losses it takes very rarely.</p>
 </div>
 </div>
 
