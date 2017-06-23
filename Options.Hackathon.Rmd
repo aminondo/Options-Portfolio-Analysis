@@ -8,7 +8,16 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+##Overview 
+We have developed a real-time trade screening platform with multiple analysis tools in R and Shiny for options trading. These tools can be utilized to help manage portfolio risk and enter / exit positions. These tools simplify and automate multiple static excel spreadsheets that used to require manual manipulation daily. 
 
+The platform builds and maintains customized daily margin, returns, and portfolio risk reporting in R, including aggregated “Greeks” statistics. 
+
+The platform pulls option chain data from the Etrade API and then populates multiple tables, creates custom visualizations in Shiny, and assists with the decision making process for option traders.
+
+
+
+## What options are
 An option is a financial derivative that represents a contract sold by one party to another party. The contract offers the buyer the right, but not the obligation, to buy (call) or sell (put) a security or other financial asset at an agreed-upon price during a certain period of time or on a specific date.
 
 #### Option Trading
@@ -120,6 +129,9 @@ The ask price is the current lowest price the market is offering to sell an unde
 This is how much the asset cost you when you initially invested.
 
 
+## Options Method Used in Model
+
+The options strategy used is known as short volatility. Within this strategy the portfolio owner only sells options rather than ever buying them. The underlying idea is the same as the insurance market as the protfolio takes on small profits overt time to compensate for the large losses it takes very rarely. 
 
 
 
