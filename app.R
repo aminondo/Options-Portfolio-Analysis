@@ -84,13 +84,14 @@ server <- function(input, output) {
     next.expiry = min(Stock$expiry)
     current = getQuote(input$ticker_selection)
     g1 = ggplot(subset(Stock, expiry == next.expiry), aes(x = strike)) +
+      ggtitle(sprintf("For next expiration date of %s", next.expiry)) + 
       geom_point(aes(y = premium, col = type)) +
       geom_vline(xintercept =as.numeric(current$Last), lty = "dotted") +
       xlab("") + ylab("Option Premium") +
       scale_colour_manual(values = c("red", "blue")) +
       facet_wrap(~ type) +
       theme_classic() + theme(legend.position = "none")
-    g2 <- ggplot(subset(AAPL, expiry == next.expiry), aes(x = strike)) +
+    g2 <- ggplot(subset(Stock, expiry == next.expiry), aes(x = strike)) +
       geom_linerange(aes(ymin = 0, ymax = open.interest / 10000, col = type)) +
       geom_vline(xintercept = current$Last, lty = "dotted") +
       xlab("Strike Price") + ylab("Open Interest (10 000)") +
